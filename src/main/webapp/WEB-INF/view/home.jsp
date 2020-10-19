@@ -8,12 +8,16 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <html>
 <head>
     <title>Welcome home!</title>
 </head>
 <body>
 <p> Hello World!</p>
+
+<p> User: <security:authentication property="principal.username"/></p>
+<p> Role: <security:authentication property="principal.authorities"/></p>
 
 <form:form action="${pageContext.request.contextPath}/logout"
            method="POST">
