@@ -1,28 +1,29 @@
 package ru.cofeok.springsecurity.demo.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.User;
-import ru.cofeok.springsecurity.demo.config.role.DemoRoles;
 import ru.cofeok.springsecurity.demo.config.role.RolesEnum;
+
+import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
 public class DemoSecurityConfig extends WebSecurityConfigurerAdapter {
+
+    // reference to SS DB
+    @Autowired
+    private DataSource securityDataSource;
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 
-        // add users for in-memory authentication
-        // using deprecated method just for demo app
-        User.UserBuilder users = User.withDefaultPasswordEncoder();
+        // jdbc authentication
+        auth.jdbcAuthentication().dataSource(securityDataSource);
 
-        auth.inMemoryAuthentication()
-                .withUser(users.username("john").password("test123").roles(DemoRoles.EMP.toStringArray()))
-                .withUser(users.username("mary").password("test123").roles(DemoRoles.MNG.toStringArray()))
-                .withUser(users.username("susan").password("test123").roles(DemoRoles.ADM.toStringArray()));
     }
 
     @Override
